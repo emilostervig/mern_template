@@ -45,8 +45,12 @@ class App extends Component {
             })
     }
     getPosts() {
+        console.log(`${this.API_URL}/posts`);
         fetch(`${this.API_URL}/posts`)
-            .then(response => response.json())
+            .then(response => {
+                console.log(response)
+                return response.json()
+            })
             .then(data => {
                 console.log(data);
             })
