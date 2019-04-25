@@ -13,6 +13,7 @@ class App extends Component {
 
         this.handleCountdown = this.handleCountdown.bind(this);
         this.getData = this.getData.bind(this);
+        this.getPosts = this.getPosts.bind(this);
     }
 
     componentDidMount() {
@@ -43,6 +44,16 @@ class App extends Component {
                 console.error("Error when fetching: ", error);
             })
     }
+    getPosts() {
+        fetch(`${this.API_URL}/posts`)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+            })
+            .catch(error => {
+                console.error("Error when fetching: ", error);
+            })
+    }
 
     render() {
         return (
@@ -52,6 +63,11 @@ class App extends Component {
                 <p>Countdown to API call: {this.state.timer}</p>
 
                 <p>Data: {this.state.data}</p>
+                <button
+                    onClick={this.getPosts}
+                    >
+                    click me for posts
+                </button>
             </div>
         );
     }
