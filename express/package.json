@@ -15,7 +15,7 @@
   },
   "description": "Small template for developing an express.js/angular 2+ application",
   "engines": {
-    "node": "10.8.0",
+    "node": "10.15.1",
     "npm": "6.4.1"
   }
 }
