@@ -58,7 +58,7 @@ let PostSchema = new Schema({
     id:  mongoose.Schema.Types.ObjectId,
     title: String,
     author: String,
-    date: Date,
+    date: { type: Date, default: Date.now()},
     body: String,
     //comments: [CommentSchema],
     upvotes: Number,
@@ -100,6 +100,7 @@ app.get("/api/post/:id", (req, res) => {
             }
         })
         .catch(err => console.log(err));
+    next()
 });
 
 
