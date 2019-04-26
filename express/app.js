@@ -32,7 +32,7 @@ app.use((req, res, next) => {
     }
 });
 
-mongoose.connect('mongodb+srv://emil:emilmongo@cluster0-pmpbu.mongodb.net/mandatory?retryWrites=true', {useNewUrlParser: true});
+mongoose.connect('mongodb+srv://emil:emil123@cluster0-pmpbu.mongodb.net/mandatory?retryWrites=true', {useNewUrlParser: true});
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
