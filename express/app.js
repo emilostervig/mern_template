@@ -32,7 +32,7 @@ app.use((req, res, next) => {
     }
 });
 
-mongoose.connect('mongodb://localhost:/posts', {useNewUrlParser: true});
+mongoose.connect('mongodb+srv://'+process.env.MONGO_USER+':'+MONGO_PASS+'@cluster0-pmpbu.mongodb.net/mandatory?retryWrites=true', {useNewUrlParser: true});
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -60,7 +60,7 @@ let PostSchema = new Schema({
     author: String,
     date: { type: Date, default: Date.now()},
     body: String,
-    //comments: [CommentSchema],
+    comments: [CommentSchema],
     upvotes: Number,
     downvotes: Number,
 });
@@ -131,6 +131,36 @@ app.post("/api/post", (req, res) => {
     });
 });
 
+
+// add comment to post
+app.post('/api/post/:id/comment', (req, res) => {
+    let comment = new PostComment({
+        author: req.body.author,
+        body: req.body.body,
+        date: req.body.date,
+        upvotes: 0,
+        downvotes: 0,
+    })
+
+    const id = req.params;
+    Post.findOneAndUpdate(
+        {_id: id},
+        { $push: {comments: comment}}
+
+        )
+        .then(result => {
+            if(!result) {
+                res.sendStatus(404).send({
+                    success: 'false',
+                    message: 'Comment not added',
+                });
+            } else {
+                res.status(200).json(result);
+            }
+        })
+        .catch(err => console.log(err));
+
+});
 
 /**** Reroute all unknown requests to the React index.html ****/
 app.get('/*', (req, res) => {

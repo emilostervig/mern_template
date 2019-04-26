@@ -7,43 +7,17 @@ class App extends Component {
         super(props);
 
         this.state = {
-            timer: 5,
-            data: "not loaded"
+            posts:  []
         };
 
-        this.handleCountdown = this.handleCountdown.bind(this);
-        this.getData = this.getData.bind(this);
         this.getPosts = this.getPosts.bind(this);
     }
 
     componentDidMount() {
-        setTimeout(this.handleCountdown, 1000);
+
     }
 
-    handleCountdown() {
-        if (this.state.timer > 0)
-        {
-            this.setState({
-                timer: this.state.timer - 1
-            });
-            setTimeout(this.handleCountdown, 1000);
-        } else {
-            this.getData();
-        }
-    }
 
-    getData() {
-        fetch(`${this.API_URL}/hello`)
-            .then(response => response.json())
-            .then(data => {
-                this.setState({
-                    data: data.msg
-                });
-            })
-            .catch(error => {
-                console.error("Error when fetching: ", error);
-            })
-    }
     getPosts() {
         console.log(`${this.API_URL}/posts`);
         fetch(`${this.API_URL}/posts`)
@@ -64,9 +38,7 @@ class App extends Component {
             <div className="container">
                 <h1>MERN Deployment Example</h1>
 
-                <p>Countdown to API call: {this.state.timer}</p>
 
-                <p>Data: {this.state.data}</p>
                 <button
                     onClick={this.getPosts}
                     >
