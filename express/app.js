@@ -32,7 +32,7 @@ app.use((req, res, next) => {
     }
 });
 
-mongoose.connect('mongodb+srv://'+process.env.MONGO_USER+':'+process.env.MONGO_PASS+'@cluster0-pmpbu.mongodb.net/mandatory?retryWrites=true', {useNewUrlParser: true});
+mongoose.connect('mongodb+srv://emil:emilmongo@cluster0-pmpbu.mongodb.net/mandatory?retryWrites=true', {useNewUrlParser: true});
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -71,8 +71,6 @@ let Post = mongoose.model('Post', PostSchema);
 
 
 /**** Routes ****/
-app.get('/api/hello', (req, res) => res.json({msg: "Hello from the API"}));
-
 // get all posts
 app.get("/api/posts", (req, res) => {
     Post.find()
