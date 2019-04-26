@@ -44,9 +44,8 @@ db.once('open', function() {
 
 var Schema = mongoose.Schema;
 var ObjectId = mongoose.Schema.Types.ObjectId;
-
 let CommentSchema = new Schema({
-    id:  mongoose.Schema.Types.ObjectId,
+    _id: {type: mongoose.Schema.ObjectId, auto: true},
     author: String,
     date: Date,
     body: String,
@@ -55,7 +54,7 @@ let CommentSchema = new Schema({
 });
 
 let PostSchema = new Schema({
-    id:  mongoose.Schema.Types.ObjectId,
+    _id: {type: mongoose.Schema.Types.ObjectId, auto: true},
     title: String,
     author: String,
     date: { type: Date, default: Date.now()},
@@ -84,7 +83,7 @@ app.get("/api/posts", (req, res) => {
 
 // get single post by id
 app.get("/api/post/:id", (req, res) => {
-    const id = req.params;
+    const id = mongoose.Types.ObjectId(req.params.id);
     Post.findById(id)
         .exec()
         .then(result => {
@@ -98,7 +97,7 @@ app.get("/api/post/:id", (req, res) => {
             }
         })
         .catch(err => console.log(err));
-    next()
+
 });
 
 
@@ -106,11 +105,10 @@ app.get("/api/post/:id", (req, res) => {
 app.post("/api/post", (req, res) => {
 
     const newPost = new Post({
-        //_id: new mongoose.Types.ObjectId(),
         author: req.body.author,
         title: req.body.title,
         body: req.body.body,
-        date: req.body.date,
+        date: new Date(),
         upvotes: 0,
         downvotes: 0,
     });
@@ -135,16 +133,15 @@ app.post('/api/post/:id/comment', (req, res) => {
     let comment = new PostComment({
         author: req.body.author,
         body: req.body.body,
-        date: req.body.date,
+        date: new Date(),
         upvotes: 0,
         downvotes: 0,
     })
-
-    const id = req.params;
-    Post.findOneAndUpdate(
+    //const id = mongoose.ObjectId.cast(req.params.id);
+    const id = mongoose.Types.ObjectId(req.params.id);
+    Post.update(
         {_id: id},
         { $push: {comments: comment}}
-
         )
         .then(result => {
             if(!result) {
@@ -157,9 +154,120 @@ app.post('/api/post/:id/comment', (req, res) => {
             }
         })
         .catch(err => console.log(err));
+});
+
+// upvote post
+app.put('/api/upvotepost/:id', (req, res) => {
+    const id = mongoose.Types.ObjectId(req.params.id);
+    Post.findOneAndUpdate(
+        {_id: id},
+        {$inc: {upvotes: 1}}
+        )
+        .then(result => console.log(result) )
+        .catch(err =>
+            res.status(500).send({
+                success: 'false',
+                message: err
+            })
+        );
+
+    return res.status(201).send({
+        success: 'true',
+        message: 'Post upvoted',
+    });
+
+});
+// downvote post
+app.put('/api/downvotepost/:id', (req, res) => {
+    const id = mongoose.Types.ObjectId(req.params.id);
+    Post.findOneAndUpdate(
+        {_id: id},
+        {$inc: {downvotes: 1}}
+    )
+        .then(result => console.log(result) )
+        .catch(err =>
+            res.status(500).send({
+                success: 'false',
+                message: err
+            })
+        );
+
+    return res.status(201).send({
+        success: 'true',
+        message: 'Post downvoted',
+    });
 
 });
 
+// upvote comment
+app.put('/api/post/:pid/upvotecomment/:id', (req, res) => {
+    const pid = mongoose.Types.ObjectId(req.params.pid);
+    const id = mongoose.Types.ObjectId(req.params.id);
+    Post.findOneAndUpdate(
+        { "_id": pid, "comments._id": id},
+        {
+            $inc: {
+                "comments.$.upvotes": 1
+            }
+        },
+        function(err,doc) {
+            if(err){
+                console.log(err)
+            } else{
+                console.log(doc)
+            }
+        })
+        .then((doc) => {
+            res.status(201).send({
+                success: 'true',
+                message: 'Post upvoted',
+                post: doc
+            });
+        })
+        .catch((err) => {
+            res.status(500).send({
+                success: 'false',
+                message: err
+            })
+        })
+
+
+
+});
+// downvote comment
+app.put('/api/post/:pid/downvotecomment/:id', (req, res) => {
+    const pid = mongoose.Types.ObjectId(req.params.pid);
+    const id = mongoose.Types.ObjectId(req.params.id);
+    Post.findOneAndUpdate(
+        { "_id": pid, "comments._id": id},
+        {
+            $inc: {
+                "comments.$.downvotes": 1
+            }
+        },
+        function(err,doc) {
+            if(err){
+                res.status(500).send({
+                    success: 'false',
+                    message: err
+                })
+            } else{
+                res.status(201).send({
+                    success: 'true',
+                    message: 'Post upvoted',
+                    post: doc
+                });
+            }
+        })
+
+});
+
+
+app.get('/api/deleteall', (req, res) => {
+    Post.deleteMany({}, (data) => {
+        res.status(200).json({msg: data})
+    })
+});
 /**** Reroute all unknown requests to the React index.html ****/
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../build/index.html'));

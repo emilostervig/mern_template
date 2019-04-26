@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import Post from './Post';
+
 
 class App extends Component {
     API_URL = process.env.REACT_APP_API_URL;
@@ -27,6 +29,11 @@ class App extends Component {
             })
             .then(data => {
                 console.log(data);
+                if(data.length > 0){
+                    this.setState({
+                        posts: data
+                    })
+                }
             })
             .catch(error => {
                 console.error("Error when fetching: ", error);
@@ -34,6 +41,7 @@ class App extends Component {
     }
 
     render() {
+        const posts = this.state.posts;
         return (
             <div className="container">
                 <h1>MERN Deployment Example</h1>
@@ -44,6 +52,18 @@ class App extends Component {
                     >
                     click me for posts
                 </button>
+                {posts.map((post) =>
+                    <Post
+                        id={post._id}
+                        author={post.author}
+                        title={post.title}
+                        body={post.body}
+                        date={post.date}
+                        comments={post.comments}
+                        upvotes={post.upvotes}
+                        downvotes={post.downvotes}
+                    />
+                )}
             </div>
         );
     }
