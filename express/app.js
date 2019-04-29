@@ -32,7 +32,7 @@ app.use((req, res, next) => {
     }
 });
 
-mongoose.connect('mongodb+srv://'+process.env.MONGO_USER+':'+process.env.MONGO_PASS+'@cluster0-pmpbu.mongodb.net/mandatory?retryWrites=true', {useNewUrlParser: true});
+mongoose.connect('mongodb+srv://emil:emil123@cluster0-pmpbu.mongodb.net/mandatory?retryWrites=true', {useNewUrlParser: true});
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -72,7 +72,7 @@ let Post = mongoose.model('Post', PostSchema);
 /**** Routes ****/
 // get all posts
 app.get("/api/posts", (req, res) => {
-    Post.find()
+    Post.find().sort({date: -1})
         .exec()
         .then(result => {
             res.status(200).json(result);
@@ -108,23 +108,26 @@ app.post("/api/post", (req, res) => {
         author: req.body.author,
         title: req.body.title,
         body: req.body.body,
-        date: new Date(),
-        upvotes: 0,
-        downvotes: 0,
+        date: req.body.date,
+        upvotes: req.body.upvotes,
+        downvotes: req.body.downvotes,
     });
     newPost.save()
-        .then(result => console.log(result) )
+        .then(result => {
+            console.log(result)
+            return res.status(201).send({
+                success: 'true',
+                message: 'Post submitted',
+                post: result
+            });
+        } )
         .catch(err =>
             res.status(500).send({
                 success: 'false',
                 message: err
             })
         );
-    return res.status(201).send({
-        success: 'true',
-        message: 'Post submitted',
-        post: newPost
-    });
+
 });
 
 
@@ -133,9 +136,9 @@ app.post('/api/post/:id/comment', (req, res) => {
     let comment = new PostComment({
         author: req.body.author,
         body: req.body.body,
-        date: new Date(),
-        upvotes: 0,
-        downvotes: 0,
+        date: req.body.date,
+        upvotes: req.body.upvotes,
+        downvotes: req.body.downvotes,
     })
     //const id = mongoose.ObjectId.cast(req.params.id);
     const id = mongoose.Types.ObjectId(req.params.id);
@@ -161,9 +164,17 @@ app.put('/api/upvotepost/:id', (req, res) => {
     const id = mongoose.Types.ObjectId(req.params.id);
     Post.findOneAndUpdate(
         {_id: id},
-        {$inc: {upvotes: 1}}
+        {$inc: {upvotes: 1}},
+        {new: true}
         )
-        .then(result => console.log(result) )
+        .then(result => {
+            console.log(result)
+            return res.status(201).send({
+                success: 'true',
+                message: 'Post upvoted',
+                post: result,
+            });
+        } )
         .catch(err =>
             res.status(500).send({
                 success: 'false',
@@ -171,10 +182,7 @@ app.put('/api/upvotepost/:id', (req, res) => {
             })
         );
 
-    return res.status(201).send({
-        success: 'true',
-        message: 'Post upvoted',
-    });
+
 
 });
 // downvote post
@@ -182,9 +190,17 @@ app.put('/api/downvotepost/:id', (req, res) => {
     const id = mongoose.Types.ObjectId(req.params.id);
     Post.findOneAndUpdate(
         {_id: id},
-        {$inc: {downvotes: 1}}
-    )
-        .then(result => console.log(result) )
+        {$inc: {downvotes: 1}},
+        {new: true}
+    ).exec()
+        .then(result => {
+            console.log(result)
+            return res.status(201).send({
+                success: 'true',
+                message: 'Post downvoted',
+                post: result,
+            });
+        } )
         .catch(err =>
             res.status(500).send({
                 success: 'false',
@@ -192,10 +208,7 @@ app.put('/api/downvotepost/:id', (req, res) => {
             })
         );
 
-    return res.status(201).send({
-        success: 'true',
-        message: 'Post downvoted',
-    });
+
 
 });
 
@@ -230,8 +243,6 @@ app.put('/api/post/:pid/upvotecomment/:id', (req, res) => {
                 message: err
             })
         })
-
-
 
 });
 // downvote comment
