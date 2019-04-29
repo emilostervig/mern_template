@@ -144,7 +144,8 @@ app.post('/api/post/:id/comment', (req, res) => {
     const id = mongoose.Types.ObjectId(req.params.id);
     Post.update(
         {_id: id},
-        { $push: {comments: comment}}
+        { $push: {comments: comment}},
+        {new: true}
         )
         .then(result => {
             if(!result) {
