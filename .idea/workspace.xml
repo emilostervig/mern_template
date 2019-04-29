@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ff97ab0e-2d22-4052-91e7-9ca574976f82" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/express/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/express/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Comment.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Comment.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -15,20 +15,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/express/app.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
+            <state relative-caret-position="-986">
               <caret line="160" column="33" lean-forward="true" selection-start-line="160" selection-start-column="33" selection-end-line="160" selection-end-column="33" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Comment.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1175">
-              <caret line="90" column="26" selection-start-line="90" selection-start-column="26" selection-end-line="96" selection-end-column="26" />
+            <state relative-caret-position="255">
+              <caret line="60" column="32" selection-start-line="60" selection-start-column="32" selection-end-line="60" selection-end-column="32" />
             </state>
           </provider>
         </entry>
@@ -145,13 +145,13 @@
         <option value="$PROJECT_DIR$/public/index.html" />
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/src/styles/styles.scss" />
-        <option value="$PROJECT_DIR$/src/Comment.js" />
         <option value="$PROJECT_DIR$/src/PostForm.js" />
         <option value="$PROJECT_DIR$/src/Post.js" />
         <option value="$PROJECT_DIR$/src/App.js" />
         <option value="$PROJECT_DIR$/src/PostResume.js" />
         <option value="$PROJECT_DIR$/src/styles.scss" />
         <option value="$PROJECT_DIR$/express/app.js" />
+        <option value="$PROJECT_DIR$/src/Comment.js" />
       </list>
     </option>
   </component>
@@ -233,12 +233,12 @@
       <option name="presentableId" value="Default" />
       <updated>1556216582211</updated>
       <workItem from="1556216583655" duration="13801000" />
-      <workItem from="1556536278465" duration="25353000" />
+      <workItem from="1556536278465" duration="25696000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="39154000" />
+    <option name="totallyTimeSpent" value="39497000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -346,20 +346,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/CommentForm.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="509">
-          <caret line="31" selection-end-line="52" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Comment.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1175">
-          <caret line="90" column="26" selection-start-line="90" selection-start-column="26" selection-end-line="96" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/PostForm.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="340">
@@ -410,8 +396,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/express/app.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
+        <state relative-caret-position="-986">
           <caret line="160" column="33" lean-forward="true" selection-start-line="160" selection-start-column="33" selection-end-line="160" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/CommentForm.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="509">
+          <caret line="31" selection-end-line="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Comment.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="60" column="32" selection-start-line="60" selection-start-column="32" selection-end-line="60" selection-end-column="32" />
         </state>
       </provider>
     </entry>

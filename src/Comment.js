@@ -58,7 +58,7 @@ export default class Comment extends Component {
         })
             .then(function(response){
                 console.log(response);
-                return response.json()
+                return response;
             }).then(function(body){
                 if(body.success == 'true'){
                     let downvotes = self.state.comment.downvotes+1
