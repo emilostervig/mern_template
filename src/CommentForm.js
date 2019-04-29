@@ -36,13 +36,20 @@ export default class CommentForm extends Component {
         comment.downvotes = this.state.downvotes;
         comment.date = new Date();
         this.props.submitComment(comment)
+        this.setState({
+            author: "",
+            body: "",
+            upvotes: 0,
+            downvotes: 0,
+            date: new Date(),
+        })
     }
 
     render() {
         return (
             <form className={"comment-form"} onSubmit={this.onFormSubmit}>
-                <input type={"text"} name={"author"} onChange={this.handleInputChange} placeholder={"Your name"}/>
-                <textarea name={"body"} onChange={this.handleInputChange} placeholder={"Your comment"}/>
+                <input type={"text"} name={"author"} onChange={this.handleInputChange} placeholder={"Your name"} value={this.state.author}/>
+                <textarea name={"body"} onChange={this.handleInputChange} placeholder={"Your comment"} value={this.state.body}/>
                 <input type={"submit"} value={"submit"}/>
             </form>
         );

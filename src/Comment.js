@@ -58,8 +58,9 @@ export default class Comment extends Component {
         })
             .then(function(response){
                 console.log(response);
-                return response;
+                return response.json();
             }).then(function(body){
+                console.log(body);
                 if(body.success == 'true'){
                     let downvotes = self.state.comment.downvotes+1
                     let comment = self.state.comment;
@@ -70,8 +71,6 @@ export default class Comment extends Component {
                         comment: comment
                     })
                 }
-
-
         });
     }
 

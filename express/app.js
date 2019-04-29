@@ -132,7 +132,7 @@ app.post("/api/post", (req, res) => {
 
 
 // add comment to post
-app.post('/api/post/:id/comment', (req, res) => {
+app.put('/api/post/:id/comment', (req, res) => {
     let comment = new PostComment({
         author: req.body.author,
         body: req.body.body,
@@ -147,15 +147,15 @@ app.post('/api/post/:id/comment', (req, res) => {
         { $push: {comments: comment}},
         {new: true}
         )
-        .then(result => {
+        .then((result) => {
             if(!result) {
-                res.sendStatus(404).send({
+                res.status(404).send({
                     success: 'false',
                     message: 'Comment not added',
                     data: result,
                 });
             } else {
-                res.sendStatus(201).send({
+                res.status(201).send({
                     success: 'true',
                     message: 'Comment added',
                     data: result,
@@ -264,17 +264,23 @@ app.put('/api/post/:pid/downvotecomment/:id', (req, res) => {
         },
         function(err,doc) {
             if(err){
-                res.status(500).send({
-                    success: 'false',
-                    message: err
-                })
+                console.log(err)
             } else{
-                res.status(201).send({
-                    success: 'true',
-                    message: 'Post upvoted',
-                    post: doc
-                });
+                console.log(doc)
             }
+        })
+        .then((doc) => {
+            res.status(201).send({
+                success: 'true',
+                message: 'Post downvoted',
+                post: doc
+            });
+        })
+        .catch((err) => {
+            res.status(500).send({
+                success: 'false',
+                message: err
+            })
         })
 
 });

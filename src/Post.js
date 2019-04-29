@@ -16,6 +16,8 @@ export default class Post extends Component {
 
         }
         this.submitComment = this.submitComment.bind(this);
+        this.handleUpvote = this.handleUpvote.bind(this);
+        this.handleDownvote = this.handleDownvote.bind(this);
 
     }
 
@@ -35,7 +37,7 @@ export default class Post extends Component {
     submitComment(comment){
         const self = this;
         fetch(process.env.REACT_APP_API_URL+'/post/'+self.state.post._id+'/comment', {
-            method: "POST",
+            method: "PUT",
             headers: {
                 "Content-Type": "application/json",
                 // "Content-Type": "application/x-www-form-urlencoded",
@@ -58,12 +60,47 @@ export default class Post extends Component {
                 joined = joined.comments.push(comment);
                 let newPost = self.state.post;
                 newPost.comments = joined;
-                self.setState({ post: newPost})
+                self.setState({ post: body.data})
+                return true;
+            });
+
+
+    }
+
+    handleDownvote() {
+        let self = this;
+        if(this.state.downvote === true){
+            return false;
+        }
+        this.props.downvotePost(this.state.post._id)
+            .then((data) => {
+                if(data.success === 'true'){
+                    self.setState({
+                        upvote: false,
+                        downvote: true,
+                        post: data.post,
+                    })
+                }
             });
     }
 
-
-
+    handleUpvote() {
+        let self = this;
+        if(this.state.upvote === true){
+            return false;
+        }
+        this.props.upvotePost(this.state.post._id)
+            .then((data) => {
+                console.log(data);
+                if(data.success === 'true'){
+                    self.setState({
+                        upvote: true,
+                        downvote: false,
+                        post: data.post,
+                    })
+                }
+            });
+    }
 
 
     render() {
@@ -72,11 +109,11 @@ export default class Post extends Component {
             <div className="full-post-item">
                 <div className={"flex-wrap"}>
                     <div className="vote">
-                        <span className="upvote" onClick={this.props.upvotePost}>+</span>
+                        <span className="upvote" onClick={this.handleUpvote}>+</span>
                         <span className="vote-number">
                             {this.state.post.upvotes - this.state.post.downvotes}
                         </span>
-                        <span className="downvote" onClick={this.props.downvotePost}>-</span>
+                        <span className="downvote" onClick={this.handleDownvote}>-</span>
                     </div>
                     <div className="post-content-wrap">
 
