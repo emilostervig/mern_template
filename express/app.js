@@ -142,7 +142,7 @@ app.post('/api/post/:id/comment', (req, res) => {
     })
     //const id = mongoose.ObjectId.cast(req.params.id);
     const id = mongoose.Types.ObjectId(req.params.id);
-    Post.update(
+    Post.findOneAndUpdate(
         {_id: id},
         { $push: {comments: comment}},
         {new: true}
@@ -152,9 +152,14 @@ app.post('/api/post/:id/comment', (req, res) => {
                 res.sendStatus(404).send({
                     success: 'false',
                     message: 'Comment not added',
+                    data: result,
                 });
             } else {
-                res.status(200).json(result);
+                res.sendStatus(201).send({
+                    success: 'true',
+                    message: 'Comment added',
+                    data: result,
+                });
             }
         })
         .catch(err => console.log(err));
