@@ -4,10 +4,14 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+
+
 /**** Configuration ****/
 const appName = "Foobar";
 const port = (process.env.PORT || 8080);
 const app = express();
+const http = require('http').Server(app);
+
 app.use(bodyParser.json()); // Parse JSON from the request body
 app.use(morgan('combined')); // Log all requests to the console
 app.use(express.static(path.join(__dirname, '../build')));
@@ -30,6 +34,20 @@ app.use((req, res, next) => {
       // move on
       next();
     }
+});
+
+/**** Start! ****/
+const server = app.listen(port, () => console.log(`${appName} API running on port ${port}!`));
+
+const io = require('socket.io').listen(server);
+
+io.of('/my_app').on('connection', function (socket) {
+    socket.on('hello', function (from, msg) {
+        console.log(`I received a private message from '${from}' saying '${msg}'`);
+    });
+    socket.on('disconnect', () => {
+        console.log("Someone disconnected...");
+    });
 });
 
 mongoose.connect('mongodb+srv://emil:emil123@cluster0-pmpbu.mongodb.net/mandatory?retryWrites=true', {useNewUrlParser: true});
@@ -66,6 +84,7 @@ let PostSchema = new Schema({
 
 let PostComment = mongoose.model('PostComment', CommentSchema);
 let Post = mongoose.model('Post', PostSchema);
+
 
 
 
@@ -115,6 +134,9 @@ app.post("/api/post", (req, res) => {
     newPost.save()
         .then(result => {
             console.log(result)
+            io.of('/my_app').emit('new-data', {
+                msg: 'New data is available on /api/my_data'
+            });
             return res.status(201).send({
                 success: 'true',
                 message: 'Post submitted',
@@ -167,6 +189,7 @@ app.put('/api/post/:id/comment', (req, res) => {
 
 // upvote post
 app.put('/api/upvotepost/:id', (req, res) => {
+
     const id = mongoose.Types.ObjectId(req.params.id);
     Post.findOneAndUpdate(
         {_id: id},
@@ -174,7 +197,10 @@ app.put('/api/upvotepost/:id', (req, res) => {
         {new: true}
         )
         .then(result => {
-            console.log(result)
+            //console.log(result)
+            io.of('/my_app').emit('new-data', {
+                msg: 'New data is available on /api/my_data'
+            });
             return res.status(201).send({
                 success: 'true',
                 message: 'Post upvoted',
@@ -200,7 +226,10 @@ app.put('/api/downvotepost/:id', (req, res) => {
         {new: true}
     ).exec()
         .then(result => {
-            console.log(result)
+            //console.log(result)
+            io.of('/my_app').emit('new-data', {
+                msg: 'New data is available on /api/my_data'
+            });
             return res.status(201).send({
                 success: 'true',
                 message: 'Post downvoted',
@@ -231,9 +260,9 @@ app.put('/api/post/:pid/upvotecomment/:id', (req, res) => {
         },
         function(err,doc) {
             if(err){
-                console.log(err)
+                //console.log(err)
             } else{
-                console.log(doc)
+                //console.log(doc)
             }
         })
         .then((doc) => {
@@ -264,9 +293,9 @@ app.put('/api/post/:pid/downvotecomment/:id', (req, res) => {
         },
         function(err,doc) {
             if(err){
-                console.log(err)
+                //console.log(err)
             } else{
-                console.log(doc)
+                //console.log(doc)
             }
         })
         .then((doc) => {
@@ -296,8 +325,6 @@ app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../build/index.html'));
 });
 
-/**** Start! ****/
-app.listen(port, () => console.log(`${appName} API running on port ${port}!`));
 
 
 

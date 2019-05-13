@@ -7,12 +7,16 @@ import PostForm from './PostForm';
 // Packages
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import {Switch} from "react-router-dom";
+import io from "socket.io-client";
+
+
 
 // styles
 import "./styles.scss";
 
 class App extends Component {
     API_URL = process.env.REACT_APP_API_URL;
+    SOCKET_URL = 'http://localhost:8080/my_app';
 
     constructor(props) {
         super(props);
@@ -31,7 +35,19 @@ class App extends Component {
     }
 
     componentDidMount() {
+        const self = this;
         this.getPosts();
+
+
+        const socket = io(this.SOCKET_URL);
+        socket.on('connect', () => {
+            console.log('connected to socket.io!');
+            socket.emit('hello', "Emil", "howdy!");
+        });
+        socket.on('new-data', (data) => {
+            console.log(`server msg: ${data.msg}`);
+            self.getPosts();
+        })
     }
 
     getPostById(id) {
@@ -133,6 +149,7 @@ class App extends Component {
             })
             .then(data => {
                 if(data.length > 0){
+                    console.log(data);
                     this.setState({
                         posts: data
                     })
@@ -164,7 +181,7 @@ class App extends Component {
         return `${d}. ${m} ${y} at ${h}:${min}`;
     }
     render() {
-        const posts = this.state.posts;
+        let posts = this.state.posts;
         return (
             <main>
                 <Router>
@@ -189,7 +206,7 @@ class App extends Component {
                                 <React.Fragment>
                                 <h1>Latest questions</h1>
                                 <ul className={"post-list"}>
-                                    {posts.map((post) =>
+                                    {this.state.posts.map((post) =>
                                         <PostResume
                                             post={post}
                                             upvotePost={this.upvotePost}

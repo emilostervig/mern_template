@@ -11,7 +11,8 @@
   "dependencies": {
     "express": "^4.16.3",
     "mongoose": "^5.5.3",
-    "morgan": "^1.9.1"
+    "morgan": "^1.9.1",
+    "socket.io": "^2.2.0"
   },
   "description": "Small template for developing an express.js/angular 2+ application",
   "engines": {

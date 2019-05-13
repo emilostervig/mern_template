@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
-export default class PostResume extends Component {
+class PostResume extends Component {
 
     constructor(props) {
         super(props);
@@ -52,29 +52,29 @@ export default class PostResume extends Component {
     render() {
         return (
             <li className="post-item">
-                <div class="vote">
-                    <span class="upvote" onClick={this.handleUpvote}>+</span>
-                    <span class="vote-number">
-                        {this.state.post.upvotes - this.state.post.downvotes}
+                <div className="vote">
+                    <span className="upvote" onClick={this.handleUpvote}>+</span>
+                    <span className="vote-number">
+                        {this.props.post.upvotes - this.props.post.downvotes}
                     </span>
-                    <span class="downvote" onClick={this.handleDownvote}>-</span>
+                    <span className="downvote" onClick={this.handleDownvote}>-</span>
                 </div>
                 <div className={"post-wrap"}>
                     <div className={"post-heading"}>
-                        <Link to={"/questions/"+this.state.post._id}>
-                            <h3>{this.state.post.title}</h3>
+                        <Link to={"/questions/"+this.props.post._id}>
+                            <h3>{this.props.post.title}</h3>
                         </Link>
                     </div>
                     <div className={"meta-info"}>
                         <i className={"author"}>
-                            By: {this.state.post.author}
+                            By: {this.props.post.author}
                         </i>
                         <span className={"date"}>
-                            Posted: {this.props.formatDate(this.state.post.date)}
+                            Posted: {this.props.formatDate(this.props.post.date)}
                         </span>
                     </div>
                     <span className={"read-more"}>
-                        <Link to={"/questions/"+this.state.post._id}>Read more</Link>
+                        <Link to={"/questions/"+this.props.post._id}>Read more</Link>
                     </span>
                 </div>
 
@@ -83,4 +83,4 @@ export default class PostResume extends Component {
     }
 }
 
-
+export default PostResume;
