@@ -16,7 +16,7 @@ import "./styles.scss";
 
 class App extends Component {
     API_URL = process.env.REACT_APP_API_URL;
-    SOCKET_URL = 'http://localhost:8080/my_app';
+    SOCKET_URL = '/my_app';
 
     constructor(props) {
         super(props);
